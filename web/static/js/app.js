@@ -1,9 +1,10 @@
-// import {Socket} from "phoenix"
+import {Socket} from "phoenix"
 
-// // let socket = new Socket("/ws")
-// // socket.connect()
-// // socket.join("topic:subtopic", {}).receive("ok", chan => {
-// // })
+let socket = new Socket("/ws")
+socket.connect()
+socket.join("quadrilateral", {}).receive("ok", chan => {
+	console.log("Welcome to the quadrilateral!")
+});
 
 // let App = {
 // }

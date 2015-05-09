@@ -18,6 +18,10 @@ defmodule Bugs.Router do
     get "/", PageController, :index
   end
 
+  socket "/ws", Bugs do
+    channel "quadrilateral", QuadrilateralChannel
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", Bugs do
   #   pipe_through :api
