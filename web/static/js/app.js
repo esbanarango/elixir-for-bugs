@@ -1,8 +1,12 @@
 import {Socket} from "phoenix"
 
 let socket = new Socket("/ws")
+let chan = null;
+let game = null;
 socket.connect()
-socket.join("quadrilateral", {}).receive("ok", chan => {
+socket.join("quadrilateral", {}).receive("ok", chanconcha => {
+	chan = chanconcha;
+
 	console.log("Welcome to the quadrilateral!")
 });
 
@@ -22,7 +26,7 @@ window.requestAnimFrame = (function(){
 		};
 })();
 
-var game = (function(window){
+game = (function(window){
 
 /**
  * Game Core (WARNING: Handle with care)
@@ -67,8 +71,9 @@ function onClicked(e) {
  	var bug = new Bug;
   bug.x = x;
   bug.y = y;
-  game_objects.push(bug);
-  count_el.textContent = parseInt(count_el.textContent, 10) + 1;
+  chan.push("new_bug", {x: x, y: y});
+  // game_objects.push(bug);
+  // count_el.textContent = parseInt(count_el.textContent, 10) + 1;
 }
 
 /*
@@ -155,7 +160,15 @@ Bug.prototype.update = function(dt) {
 }
 
 function initGame() {
-	game_objects.push(new Bug);
+	chan.on("new_bug", payload => {
+	 	var bug = new Bug;
+	  bug.x = payload.x;
+	  bug.y = payload.y;
+	  game_objects.push(bug);
+	  count_el.textContent = parseInt(count_el.textContent, 10) + 1;
+  });
+
+	// game_objects.push(new Bug);
 }
 
 function resize(e) {
